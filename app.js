@@ -30,9 +30,11 @@ async function getInstanceId() {
   }
 }
 
-const instanceId = getInstanceId()
+let instanceId = 'unknown'
 
-function respond(counter) {
+async function respond(counter) {
+  instanceId = await fetchInstanceId()
+
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
   return {
