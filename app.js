@@ -25,8 +25,10 @@ function respond(counter) {
     gitCommit,
     gitCommitUrl,
     githubRunUrl,
-    GAE_INSTANCE,
     gaeInstance: process.env.GAE_INSTANCE,
+    K_CONFIGURATION: process.env.K_CONFIGURATION,
+    K_SERVICE: process.env.K_SERVICE,
+    K_REVISION: process.env.K_REVISION,
   }
 }
 function blockCpuFor(ms) {
