@@ -3,7 +3,8 @@ const Redis = require('ioredis')
 const os = require('os')
 
 const app = express()
-const instance = os.hostname()
+const instance =
+  process.env.K_REVISION || Math.random().toString(36).slice(2, 10)
 
 let val = 0
 
