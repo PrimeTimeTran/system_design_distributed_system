@@ -61,7 +61,7 @@ docker buildx build \
   -t gcr.io/system-design-123/system-design-distributed-service \
   --push .
 
-# Push to GCP 
+# Push to GCP
 docker push gcr.io/system-design-123/system-design-distributed-service
 ```
 
@@ -86,5 +86,7 @@ docker run -p 8080:8080 gcr.io/system-design-123/system-design-distributed-servi
 ```
 
 ## Deploy
+
+Push to Github
 
 # Conclusion
