@@ -40,6 +40,17 @@ app.get('/value', async (req, res) => {
   res.json(respond(val))
 })
 
+app.get('/debug', async (req, res) => {
+  const { execSync } = require('child_process')
+  const rawHost = execSync('cat /etc/hostname').toString().trim()
+  res.json({
+    osHostname: os.hostname(),
+    etcHostname: rawHost,
+  })
+})
+
+console.log('⚙️  Cloud Run hostname:', os.hostname())
+
 const port = process.env.PORT || 8080
 app.listen(port, () => {
   console.log(`Service running on port ${port} (instance ${instanceId})`)
