@@ -4,11 +4,10 @@ const os = require('os')
 const { randomUUID } = require('crypto')
 
 const app = express()
-const instance =
-  process.env.K_REVISION || Math.random().toString(36).slice(2, 10)
-
 const hostName = os.hostname()
 const uid = Math.random().toString(36).slice(2, 10)
+const revision =
+  process.env.K_REVISION || Math.random().toString(36).slice(2, 10)
 
 let val = 0
 
@@ -21,11 +20,13 @@ function respond(counter) {
   return {
     uid,
     counter,
-    instance,
+    revision,
     hostName,
     gitCommit,
     gitCommitUrl,
     githubRunUrl,
+    GAE_INSTANCE,
+    gaeInstance: process.env.GAE_INSTANCE,
   }
 }
 function blockCpuFor(ms) {
@@ -36,7 +37,6 @@ function blockCpuFor(ms) {
 app.get('/increment', async (req, res) => {
   blockCpuFor(3000)
   await new Promise((resolve) => setTimeout(resolve, 3000))
-
   val += 1
   res.json(respond(val))
 })
@@ -63,5 +63,5 @@ console.log('⚙️  Cloud Run hostname:', os.hostname())
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
-  console.log(`Service running on port ${port} (instance ${instance})`)
+  console.log(`Service running on port ${port} (revision ${revision})`)
 })
