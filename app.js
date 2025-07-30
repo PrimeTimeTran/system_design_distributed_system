@@ -14,6 +14,24 @@ let val = 0
 const gitCommit = process.env.GIT_COMMIT || 'unknown'
 const githubRunUrl = process.env.GITHUB_RUN_URL || 'not_available'
 
+async function getInstanceId() {
+  try {
+    const res = await fetch(
+      'http://metadata.google.internal/computeMetadata/v1/instance/id',
+      {
+        headers: { 'Metadata-Flavor': 'Google' },
+      }
+    )
+    const instanceId = await res.text()
+    console.log(`[BOOT] Fetched Cloud Run instance ID: ${instanceId}`)
+    return instanceId
+  } catch (err) {
+    console.error('Failed to get instance ID:', err)
+  }
+}
+
+const instanceId = getInstanceId()
+
 function respond(counter) {
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
@@ -25,6 +43,7 @@ function respond(counter) {
     gitCommit,
     gitCommitUrl,
     githubRunUrl,
+    instanceId,
     gaeInstance: process.env.GAE_INSTANCE,
     K_CONFIGURATION: process.env.K_CONFIGURATION,
     K_SERVICE: process.env.K_SERVICE,
