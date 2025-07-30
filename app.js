@@ -16,6 +16,7 @@ function respond(counter) {
 
   return {
     spam: 'ham',
+    foo: 'bar',
     counter,
     instance: instanceId,
     gitCommit,
