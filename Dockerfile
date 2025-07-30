@@ -1,5 +1,5 @@
-# Use official Node.js image
-FROM node:18
+# Use clean base image
+FROM node:18-slim
 
 # Set working directory
 WORKDIR /app
@@ -16,4 +16,3 @@ EXPOSE 8080
 
 # Run app
 CMD [ "node", "app.js" ]
-
