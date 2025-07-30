@@ -1,20 +1,13 @@
 const express = require('express')
-const Redis = require('ioredis')
-const os = require('os')
-const { randomUUID } = require('crypto')
 
 const app = express()
-const hostName = os.hostname()
 const uid = Math.random().toString(36).slice(2, 10)
-const revision =
-  process.env.K_REVISION || Math.random().toString(36).slice(2, 10)
-
-let val = 0
-
 const gitCommit = process.env.GIT_COMMIT || 'unknown'
 const githubRunUrl = process.env.GITHUB_RUN_URL || 'not_available'
+const revision = process.env.K_REVISION
 
-let instanceId = 'unknown'
+let val = 0
+let googleCloudRunInstanceId = 'unknown'
 
 async function getInstanceId() {
   try {
@@ -24,9 +17,8 @@ async function getInstanceId() {
         headers: { 'Metadata-Flavor': 'Google' },
       }
     )
-    instanceId = await res.text()
-    console.log(`[BOOT] Fetched Cloud Run instance ID: ${instanceId}`)
-    return instanceId
+    googleCloudRunInstanceId = await res.text()
+    return googleCloudRunInstanceId
   } catch (err) {
     console.error('Failed to get instance ID:', err)
   }
@@ -38,12 +30,11 @@ function respond(counter) {
   return {
     uid,
     counter,
-    revision,
-    hostName,
     gitCommit,
     gitCommitUrl,
     githubRunUrl,
-    instanceId,
+    googleCloudRunRevision: revision,
+    googleCloudRunInstanceId: googleCloudRunInstanceId,
     gaeInstance: process.env.GAE_INSTANCE,
     K_CONFIGURATION: process.env.K_CONFIGURATION,
     K_SERVICE: process.env.K_SERVICE,
@@ -56,19 +47,17 @@ function blockCpuFor(ms) {
 }
 
 app.get('/increment', async (req, res) => {
-  blockCpuFor(3000)
-  await new Promise((resolve) => setTimeout(resolve, 3000))
-
+  const delay = parseInt(req.query.delay) || 3000
+  blockCpuFor(delay)
+  await new Promise((resolve) => setTimeout(resolve, delay))
   val += 1
   res.json(respond(val))
 })
 app.get('/decrement', async (req, res) => {
-  // const newValue = await redis.decr('counter')
   val -= 1
   res.json(respond(val))
 })
 app.get('/value', async (req, res) => {
-  // const val = await redis.get('counter')
   res.json(respond(val))
 })
 
@@ -76,12 +65,11 @@ app.get('/debug', async (req, res) => {
   const { execSync } = require('child_process')
   const rawHost = execSync('cat /etc/hostname').toString().trim()
   res.json({
-    osHostname: os.hostname(),
     etcHostname: rawHost,
+    googleCloudRunRevision: revision,
+    googleCloudRunInstanceId: instanceId,
   })
 })
-
-console.log('⚙️  Cloud Run hostname:', os.hostname())
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
