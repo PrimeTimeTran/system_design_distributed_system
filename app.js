@@ -32,9 +32,7 @@ async function getInstanceId() {
   }
 }
 
-getInstanceId()
-
-async function respond(counter) {
+function respond(counter) {
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
   return {
@@ -60,6 +58,7 @@ function blockCpuFor(ms) {
 app.get('/increment', async (req, res) => {
   blockCpuFor(3000)
   await new Promise((resolve) => setTimeout(resolve, 3000))
+
   val += 1
   res.json(respond(val))
 })
@@ -86,5 +85,6 @@ console.log('⚙️  Cloud Run hostname:', os.hostname())
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
+  getInstanceId()
   console.log(`Service running on port ${port} (revision ${revision})`)
 })
