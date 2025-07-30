@@ -38,10 +38,11 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ secrets.GCP_SERVICE }} \
-            --concurrency=1 \
-            --min-instances=2 \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:${{ github.sha }} \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
+            --concurrency=1 \
+            --min-instances=2 \
+            --max-instances=20 \
             --set-env-vars GIT_COMMIT=${{ github.sha }},GITHUB_RUN_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
