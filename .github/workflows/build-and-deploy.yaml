@@ -38,6 +38,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ secrets.GCP_SERVICE }} \
+            --min-instances=2 \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE }}:${{ github.sha }} \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
