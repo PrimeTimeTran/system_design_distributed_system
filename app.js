@@ -12,11 +12,14 @@ const gitCommit = process.env.GIT_COMMIT || 'unknown'
 const githubRunUrl = process.env.GITHUB_RUN_URL || 'not_available'
 
 function respond(counter) {
+  const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
+
   return {
     spam: 'ham',
     counter,
     instance: instanceId,
     gitCommit,
+    gitCommitUrl,
     githubRunUrl,
   }
 }
