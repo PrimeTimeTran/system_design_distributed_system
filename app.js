@@ -3,7 +3,6 @@ const Redis = require('ioredis')
 const os = require('os')
 
 const app = express()
-// const redis = new Redis(process.env.REDIS_URL)
 const instance = os.hostname()
 
 let val = 0
@@ -51,5 +50,5 @@ console.log('⚙️  Cloud Run hostname:', os.hostname())
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
-  console.log(`Service running on port ${port} (instance ${instanceId})`)
+  console.log(`Service running on port ${port} (instance ${instance})`)
 })
