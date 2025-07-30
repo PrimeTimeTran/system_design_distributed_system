@@ -14,6 +14,8 @@ let val = 0
 const gitCommit = process.env.GIT_COMMIT || 'unknown'
 const githubRunUrl = process.env.GITHUB_RUN_URL || 'not_available'
 
+let instanceId = 'unknown'
+
 async function getInstanceId() {
   try {
     const res = await fetch(
@@ -22,7 +24,7 @@ async function getInstanceId() {
         headers: { 'Metadata-Flavor': 'Google' },
       }
     )
-    const instanceId = await res.text()
+    instanceId = await res.text()
     console.log(`[BOOT] Fetched Cloud Run instance ID: ${instanceId}`)
     return instanceId
   } catch (err) {
@@ -30,11 +32,9 @@ async function getInstanceId() {
   }
 }
 
-let instanceId = 'unknown'
+await fetchInstanceId()
 
 async function respond(counter) {
-  instanceId = await fetchInstanceId()
-
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
   return {
