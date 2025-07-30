@@ -1,0 +1,16 @@
+{
+  "name": "system_design_distributed_system",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "ioredis": "^5.6.1"
+  }
+}

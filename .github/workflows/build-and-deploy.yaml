@@ -1,0 +1,57 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  SERVICE_NAME: my-node-service
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Google Cloud SDK
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # Extract Git metadata
+      - name: Export Git metadata
+        run: |
+          echo "GIT_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "GITHUB_RUN_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
+
+      # Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg GIT_COMMIT=${{ env.GIT_COMMIT }} \
+            --build-arg GITHUB_RUN_URL=${{ env.GITHUB_RUN_URL }} \
+            -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }} .
+
+      - name: Push Docker image to GCR
+        run: |
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}
+          env_vars: |
+            GIT_COMMIT=${{ env.GIT_COMMIT }}
+            GITHUB_RUN_URL=${{ env.GITHUB_RUN_URL }}
