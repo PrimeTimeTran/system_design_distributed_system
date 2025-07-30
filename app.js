@@ -4,7 +4,7 @@ const os = require('os')
 
 const app = express()
 // const redis = new Redis(process.env.REDIS_URL)
-const instanceId = os.hostname()
+const instance = os.hostname()
 
 let val = 0
 
@@ -15,10 +15,8 @@ function respond(counter) {
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
   return {
-    spam: 'ham',
-    foo: 'bar',
     counter,
-    instance: instanceId,
+    instance,
     gitCommit,
     gitCommitUrl,
     githubRunUrl,
