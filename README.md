@@ -1,8 +1,8 @@
 # GCP Distributed System
 
-## Test
+[Demo](https://system-design-distributed-service-890407456021.us-central1.run.app/increment)
 
-## Guide
+## GCP Setup
 
 1. Create a GCP Project
 
@@ -81,11 +81,19 @@ gcloud run deploy $SERVICE_NAME \
 
 ## Test
 
+Build image and run on your local
+
 ```sh
+docker buildx build \
+  --platform linux/amd64 \
+  -t gcr.io/system-design-123/system-design-distributed-service
+
 docker run -p 8080:8080 gcr.io/system-design-123/system-design-distributed-service
 ```
 
 ## Deploy
+
+Deploy a new version to GCP Cloud run by pushing to Github.
 
 Push to Github
 

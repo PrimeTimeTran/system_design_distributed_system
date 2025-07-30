@@ -13,6 +13,7 @@ const githubRunUrl = process.env.GITHUB_RUN_URL || 'not_available'
 
 function respond(counter) {
   return {
+    spam: 'ham',
     counter,
     instance: instanceId,
     gitCommit,
