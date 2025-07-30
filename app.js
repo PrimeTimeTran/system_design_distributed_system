@@ -23,9 +23,13 @@ function respond(counter) {
     githubRunUrl,
   }
 }
+function blockCpuFor(ms) {
+  const end = Date.now() + ms
+  while (Date.now() < end) {}
+}
 
 app.get('/increment', async (req, res) => {
-  // const newValue = await redis.incr('counter')
+  blockCpuFor(3000)
   await new Promise((resolve) => setTimeout(resolve, 3000))
 
   val += 1
