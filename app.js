@@ -15,6 +15,7 @@ function respond(counter) {
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
   return {
+    foo: 'bar',
     counter,
     instance,
     gitCommit,

@@ -99,7 +99,17 @@ Push to Github
 
 # Conclusion
 
-
-
 ## Test the number of instances from CLI
+
+```sh
 for i in {1..100}; do curl -s https://system-design-distributed-service-890407456021.us-central1.run.app/increment | jq .instance & done; wait
+```
+
+## Describe service metrics
+
+```sh
+gcloud run services describe system-design-distributed-service \
+  --platform=managed \
+  --region=us-central1 \
+  --format="yaml"
+```
