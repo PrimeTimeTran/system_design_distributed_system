@@ -106,17 +106,15 @@ for i in {1..100}; do curl -s https://system-design-distributed-service-89040745
 ```
 
 ```sh
-seq 1 100 | xargs -n1 -P100 -I{} bash -c 'curl -s https://system-design-distributed-service-890407456021.us-central1.run.app/increment | jq -r ".instance" 2>/dev/null || echo "INVALID"' | sort | uniq -c
-
-
 seq 1 100 | xargs -n1 -P100 -I{} bash -c '
-  res=$(curl -s -w "%{http_code}" -o tmp_response.json https://system-design-distributed-service-890407456021.us-central1.run.app/increment)
+  res=$(curl -s -w "%{http_code}" -o tmp.json https://system-design-distributed-service-890407456021.us-central1.run.app/increment)
   if [ "$res" = "200" ]; then
-    jq -r ".instance" < tmp_response.json
+    jq -r .instance < tmp.json
   else
     echo "HTTP $res"
   fi
 ' | sort | uniq -c
+
 ```
 
 ## Describe service metrics

@@ -1,10 +1,14 @@
 const express = require('express')
 const Redis = require('ioredis')
 const os = require('os')
+const { randomUUID } = require('crypto')
 
 const app = express()
 const instance =
   process.env.K_REVISION || Math.random().toString(36).slice(2, 10)
+
+const hostName = os.hostname()
+const uid = Math.random().toString(36).slice(2, 10)
 
 let val = 0
 
@@ -15,9 +19,10 @@ function respond(counter) {
   const gitCommitUrl = `https://github.com/PrimeTimeTran/system_design_distributed_system/commit/${gitCommit}`
 
   return {
-    foo: 'bar',
+    uid,
     counter,
     instance,
+    hostName,
     gitCommit,
     gitCommitUrl,
     githubRunUrl,
