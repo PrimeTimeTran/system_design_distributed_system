@@ -98,3 +98,10 @@ Deploy a new version to GCP Cloud run by pushing to Github.
 Push to Github
 
 # Conclusion
+
+
+
+## Test the number of instances from CLI
+for i in {1..100}; do curl -s https://system-design-distributed-service-890407456021.us-central1.run.app/increment | jq .instance & done; wait
+
+

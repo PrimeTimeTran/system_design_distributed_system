@@ -25,6 +25,8 @@ function respond(counter) {
 
 app.get('/increment', async (req, res) => {
   // const newValue = await redis.incr('counter')
+  await new Promise((resolve) => setTimeout(resolve, 3000))
+
   val += 1
   res.json(respond(val))
 })
